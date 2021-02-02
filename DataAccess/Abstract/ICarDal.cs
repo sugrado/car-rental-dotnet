@@ -7,7 +7,6 @@ namespace DataAccess.Abstract
 {
     public interface ICarDal
     {
-        // GetById, GetAll, Add, Update, Delete methodları yazılacak.
         List<Car> GetAll();
         void Add(Car car);
         void Update(Car car);
