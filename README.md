@@ -1,2 +1,2 @@
 # ReCapProject
-Layered architecture project. Daily car rental simulation.
+Multitier architecture project. Daily car rental simulation.
