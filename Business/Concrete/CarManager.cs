@@ -44,5 +44,10 @@ namespace Business.Concrete
             Car forDelete = _carDal.GetAll().SingleOrDefault(p => p.Id == id);
             _carDal.Delete(forDelete);
         }
+
+        public void UpdateCar(Car car)
+        {
+            _carDal.Update(car);
+        }
     }
 }

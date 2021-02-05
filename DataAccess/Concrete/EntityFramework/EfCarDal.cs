@@ -51,8 +51,12 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using (CarsinfoContext context = new CarsinfoContext())
             {
-                var updatedEntity = context.Entry(car);
-                updatedEntity.State = EntityState.Modified;
+                var updatedEntity = context.Cars.SingleOrDefault(p=> p.Id == car.Id);
+                updatedEntity.ModelYear = car.ModelYear;
+                updatedEntity.Description = car.Description;
+                updatedEntity.DailyPrice = car.DailyPrice;
+                updatedEntity.ColorId = car.ColorId;
+                updatedEntity.BrandId = car.BrandId;
                 context.SaveChanges();
             }
         }
