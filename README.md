@@ -1,6 +1,7 @@
 # Multitier architecture project. Daily car rental simulation.  
 
 Feb 7, 2021  
+- Fixed GetById method and made available for each object.  
 - Globel Core layer added.  
 - Some universal interfaces moved to the Core layer.  
 - Dto used.  
