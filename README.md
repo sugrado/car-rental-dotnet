@@ -9,14 +9,14 @@ Feb 7, 2021
 - GetCarDetails method is used in program.cs.  
   
 Feb 5, 2021  
--Car update method added.  
--Adding each method's sample usage to Program.cs  
+- Car update method added.  
+- Adding each method's sample usage to Program.cs  
   
 Feb 4, 2021  
--Brand and Color objects have been added.  
--EntityFramework added.  
--GetCarsByBrandId and GetCarsByColorId methods added.  
--Some conditions have been added to add vehicles to the database.  
+- Brand and Color objects have been added.  
+- EntityFramework added.  
+- GetCarsByBrandId and GetCarsByColorId methods added.  
+- Some conditions have been added to add vehicles to the database.  
   
 Feb 1, 2021  
--Add project files.  
+- Add project files.  
