@@ -3,6 +3,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -29,6 +30,11 @@ namespace Business.Concrete
         public List<Brand> GetAllBrand()
         {
             return _brandDal.GetAll();
+        }
+
+        public Brand GetById(int id)
+        {
+            return _brandDal.GetAll().SingleOrDefault(p => p.Id == id);
         }
 
         public void UpdateBrand(Brand brand)

@@ -12,7 +12,7 @@ namespace ConsoleUI
         {
             //Operations();
             CarManager carManager = new CarManager(new EfCarDal());
-
+            
             foreach (var car in carManager.GetCarDetails())
             {
                 Console.WriteLine("Id: {0} / Brand: {1} / Color: {2} / Price: {3}", car.Id, car.BrandName, car.ColorName, car.DailyPrice);
@@ -22,12 +22,19 @@ namespace ConsoleUI
         private static void Operations()
         {
             CarManager carManager = new CarManager(new EfCarDal());
+            BrandManager brandManager = new BrandManager(new EfBrandDal());
+            ColorManager colorManager = new ColorManager(new EfColorDal());
 
             // GetAll method.
             foreach (var x in carManager.GetAll())
             {
                 Console.WriteLine(x.Description);
             }
+
+            // GetById method.
+            Console.WriteLine(carManager.GetById(3002).ModelYear);
+            Console.WriteLine("{0}", brandManager.GetById(1).Name);
+            Console.WriteLine("{0}", colorManager.GetById(2).Name);
 
             // GetCarsByColorId method.
             foreach (var x in carManager.GetCarsByColorId(2))

@@ -3,6 +3,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -29,6 +30,11 @@ namespace Business.Concrete
         public List<Color> GetAllColor()
         {
             return _colorDal.GetAll();
+        }
+
+        public Color GetById(int id)
+        {
+            return _colorDal.GetAll().SingleOrDefault(p => p.Id == id);
         }
 
         public void UpdateColor(Color color)
