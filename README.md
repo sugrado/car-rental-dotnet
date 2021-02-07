@@ -1,4 +1,12 @@
 # Multitier architecture project. Daily car rental simulation.  
+
+Feb 7, 2021  
+- Globel Core layer added.  
+- Some universal interfaces moved to the Core layer.  
+- Dto used.  
+- Added all CRUD operations for Car, Brand and Color objects.  
+- GetCarDetails method was added by joining 3 tables in the database.  
+- GetCarDetails method is used in program.cs.  
   
 Feb 5, 2021  
 -Car update method added.  
