@@ -1,5 +1,13 @@
 # Multitier architecture project. Daily car rental simulation.  
 
+Feb 14, 2021  
+- "Results" configuration created in "Core" layer.  
+- "Business" classes have been refactored.  
+- Created "Users" table.  
+- Created "Customers" table.  
+- Created "Rentals" table.  
+- The necessary conditions have been added for renting a car.  
+  
 Feb 7, 2021  
 - Fixed GetById method and made available for each object.  
 - Globel Core layer added.  
