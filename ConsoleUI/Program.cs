@@ -11,9 +11,39 @@ namespace ConsoleUI
         static void Main(string[] args)
         {
             //Operations();
+            //ListByDto();
+            //AddUser1();
+            //AddCustomer1();
+            //Console.WriteLine(carManager.RemoveCar(4002).Message); 
+            //Rent();
+        }
+
+        private static void Rent()
+        {
+            Rental rent1 = new Rental { CarId = 2, CustomerId = 3, RentDate = new DateTime(2020, 2, 14), ReturnDate = new DateTime(2021, 1, 15) };
+
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            Console.WriteLine(rentalManager.AddRental(rent1).Message);
+        }
+
+        private static void AddCustomer1()
+        {
+            CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
+            Customer cr2 = new Customer { UserId = 1, CompanyName = "MHMT" };
+            Console.WriteLine(customerManager.AddCustomer(cr2).Message);
+        }
+
+        private static void AddUser1()
+        {
+            UserManager userManager = new UserManager(new EfUserDal());
+            User cr1 = new User { FirstName = "grkm", LastName = "ark", Email = "qwjeıqwjeqw", Password = "s818ssasd" };
+            Console.WriteLine(userManager.AddUser(cr1).Message);
+        }
+
+        private static void ListByDto()
+        {
             CarManager carManager = new CarManager(new EfCarDal());
-            
-            foreach (var car in carManager.GetCarDetails())
+            foreach (var car in carManager.GetCarDetails().Data)
             {
                 Console.WriteLine("Id: {0} / Brand: {1} / Color: {2} / Price: {3}", car.Id, car.BrandName, car.ColorName, car.DailyPrice);
             }
@@ -26,24 +56,24 @@ namespace ConsoleUI
             ColorManager colorManager = new ColorManager(new EfColorDal());
 
             // GetAll method.
-            foreach (var x in carManager.GetAll())
+            foreach (var x in carManager.GetAllCars().Data)
             {
                 Console.WriteLine(x.Description);
             }
 
             // GetById method.
-            Console.WriteLine(carManager.GetById(3002).ModelYear);
-            Console.WriteLine("{0}", brandManager.GetById(1).Name);
-            Console.WriteLine("{0}", colorManager.GetById(2).Name);
+            Console.WriteLine(carManager.GetById(3002).Data.ModelYear);
+            Console.WriteLine("{0}", brandManager.GetById(1).Data.Name);
+            Console.WriteLine("{0}", colorManager.GetById(2).Data.Name);
 
             // GetCarsByColorId method.
-            foreach (var x in carManager.GetCarsByColorId(2))
+            foreach (var x in carManager.GetCarsByColorId(2).Data)
             {
                 Console.WriteLine(x.BrandId);
             }
 
             // GetCarsByBrandId method.
-            foreach (var x in carManager.GetCarsByBrandId(256))
+            foreach (var x in carManager.GetCarsByBrandId(256).Data)
             {
                 Console.WriteLine(x.Description);
             }
