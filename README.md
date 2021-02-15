@@ -1,5 +1,10 @@
 # Multitier architecture project. Daily car rental simulation.  
 
+Feb 15, 2021  
+- "WebAPI" layer was established.  
+- All services in the business layer were written for APIs.  
+- GetById method added for rentals.  
+  
 Feb 14, 2021  
 - "Results" configuration created in "Core" layer.  
 - "Business" classes have been refactored.  
