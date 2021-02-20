@@ -1,5 +1,11 @@
 # Multitier architecture project. Daily car rental simulation.  
 
+Feb 20, 2021  
+- "AOP" support added.  
+- ValidationAspect added.  
+- "FluentValidation" support added.  
+- "Autofac" support added.  
+  
 Feb 15, 2021  
 - "WebAPI" layer was established.  
 - All services in the business layer were written for APIs.  
