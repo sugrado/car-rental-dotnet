@@ -16,6 +16,12 @@ namespace Business.ValidationRules.FluentValdiation
 
             RuleFor(p => p.DailyPrice).GreaterThan(0);
             RuleFor(p => p.DailyPrice).NotEmpty();
+
+            RuleFor(p => p.BrandId).NotEmpty();
+
+            RuleFor(p => p.ColorId).NotEmpty();
+
+            RuleFor(p => p.ModelYear).NotEmpty();
         }
     }
 }   
