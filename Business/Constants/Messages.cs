@@ -15,5 +15,6 @@ namespace Business.Constants
         public static string NotListed = "Couldn't be listed.";
         public static string NotDeleted = "Couldn't be deleted.";
         public static string NotUpdated = "Couldn't be updated.";
+        public static string CarImageLımıtExceeded = "More than 5 photos cannot be uploaded for a vehicle.";
     }
 }
