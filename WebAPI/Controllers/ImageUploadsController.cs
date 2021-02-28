@@ -19,6 +19,7 @@ namespace WebAPI.Controllers
     public class ImageUploadsController : ControllerBase
     {
         ICarImageService _carImageService;
+<<<<<<< Updated upstream
         IWebHostEnvironment _webHostEnvironment;
 
         public ImageUploadsController(ICarImageService carImageService, IWebHostEnvironment webHostEnvironment)
@@ -67,6 +68,21 @@ namespace WebAPI.Controllers
                 return Ok(new SuccessResult(Messages.Added));
             }
             return BadRequest(check);  
+=======
+
+        public ImageUploadsController(ICarImageService carImageService)
+        {
+            _carImageService = carImageService;
+        }
+
+        [HttpPost("add")]
+        public IActionResult Add([FromForm(Name = ("Image"))] IFormFile file, [FromForm] CarImage carImage)
+        {
+            var result = _carImageService.AddCarImage(file, carImage);
+
+            if (result.Success) return Ok(result);
+            return BadRequest(result);  
+>>>>>>> Stashed changes
         }
 
         [HttpGet("getall")]
@@ -77,17 +93,40 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+<<<<<<< Updated upstream
         [HttpPost("update")]
         public IActionResult Update(CarImage carImage)
         {
             var result = _carImageService.UpdateCarImage(carImage);
+=======
+        [HttpGet("getimagesbycarid")]
+        public IActionResult GetImagesById([FromForm(Name = ("CarId"))] int carId)
+        {
+            var result = _carImageService.GetImagesByCarId(carId);
+
+            if (result.Success) return Ok(result);
+            return BadRequest(result);
+        }
+
+        [HttpPost("update")]
+        public IActionResult Update([FromForm(Name = ("Image"))] IFormFile file, [FromForm(Name = ("Id"))] int Id)
+        {
+            var carImage = _carImageService.Get(Id).Data;
+            var result = _carImageService.UpdateCarImage(file, carImage);
+>>>>>>> Stashed changes
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }
 
         [HttpPost("delete")]
+<<<<<<< Updated upstream
         public IActionResult Delete(CarImage carImage)
         {
+=======
+        public IActionResult Delete([FromForm(Name = ("Id"))] int id)
+        {
+            var carImage = _carImageService.Get(id).Data;
+>>>>>>> Stashed changes
             var result = _carImageService.DeleteCarImage(carImage);
             if (result.Success) return Ok(result);
             return BadRequest(result);
