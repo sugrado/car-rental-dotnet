@@ -21,3 +21,4 @@ namespace Core.Utilities.Results
         public string Message { get; }
     }
 }
+    
