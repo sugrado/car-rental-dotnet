@@ -1,5 +1,14 @@
 # Multitier architecture project. Daily car rental simulation.  
-
+  
+Feb 28, 2021  
+- Add CarImages table.  
+- Add a picture to the car via the WebAPI.  
+- Pictures stored with GUID.  
+- Image deletion, update capabilities added.  
+- A car can have up to 5 images.  
+- The date of the picture upload is determined automatically.  
+- The default image is shown for vehicles without photos.  
+  
 Feb 20, 2021  
 - "AOP" support added.  
 - ValidationAspect added.  
