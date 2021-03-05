@@ -79,7 +79,7 @@ namespace WebAPI.Controllers
         [HttpPost("delete")]
         public IActionResult Delete(int id)
         {
-            var result = _carService.RemoveCar(id);
+            var result = _carService.DeleteCar(id);
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }

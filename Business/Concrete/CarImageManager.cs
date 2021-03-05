@@ -13,6 +13,9 @@ using Core.Utilities.FileHelper;
 using System.IO;
 using Business.ValidationRules.FluentValdiation;
 using Core.Aspects.Autofac.Validation;
+using Core.Aspects.Autofac.Performance;
+using Business.BusinessAspects.Autofac;
+using Core.Aspects.Autofac.Caching;
 
 namespace Business.Concrete
 {
@@ -26,6 +29,8 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CarImageValidator))]
+        [SecuredOperation("image.add,admin")]
+        [CacheRemoveAspect("ICarImageService.Get")]
         public IResult AddCarImage(IFormFile file, CarImage carImage)
         {
             IResult result = BusinessRules.Run(CheckCarImageLimit(carImage.CarId));
@@ -42,6 +47,8 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CarImageValidator))]
+        [SecuredOperation("image.delete,admin")]
+        [CacheRemoveAspect("ICarImageService.Get")]
         public IResult DeleteCarImage(CarImage carImage)
         {
             var oldpath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\wwwroot")) + _carImageDal.Get(p => p.Id == carImage.Id).ImagePath;
@@ -56,12 +63,15 @@ namespace Business.Concrete
             return new SuccessResult(Messages.Deleted);
         }
 
+        [CacheAspect]
         public IDataResult<List<CarImage>> GetImagesOfCar(Car car)
         {
             var result = _carImageDal.GetAll(p=>p.CarId == car.Id);
             return new SuccessDataResult<List<CarImage>>(result, Messages.Listed);
         }
 
+        [PerformanceAspect(5)]
+        [CacheAspect]
         public IDataResult<List<CarImage>> GetAllCarImages()
         {
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll(), Messages.Listed);
@@ -73,6 +83,8 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CarImageValidator))]
+        [SecuredOperation("image.update,admin")]
+        [CacheRemoveAspect("ICarImageService.Get")]
         public IResult UpdateCarImage(IFormFile file, CarImage carImage)
         {
             var oldpath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\wwwroot")) + _carImageDal.Get(p => p.Id == carImage.Id).ImagePath;
@@ -92,6 +104,7 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
+
 
         public IDataResult<List<CarImage>> GetImagesByCarId(int id)
         {
@@ -125,6 +138,13 @@ namespace Business.Concrete
             }
 
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll(p => p.CarId == id).ToList());
+        }
+
+        public IResult TransactionalAdd(IFormFile file, CarImage carImage)
+        {
+            AddCarImage(file, carImage);
+            UpdateCarImage(file, carImage);
+            return new SuccessResult(Messages.Updated);
         }
     }
 }

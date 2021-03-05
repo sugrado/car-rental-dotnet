@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using Core.Entities.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
@@ -47,7 +48,7 @@ namespace ConsoleUI
         private static void AddUser1()
         {
             UserManager userManager = new UserManager(new EfUserDal());
-            User cr1 = new User { FirstName = "grkm", LastName = "ark", Email = "qwjeıqwjeqw", Password = "s818ssasd" };
+            User cr1 = new User { FirstName = "grkm", LastName = "ark", Email = "qwjeıqwjeqw" };
             Console.WriteLine(userManager.AddUser(cr1).Message);
         }
 
@@ -97,7 +98,7 @@ namespace ConsoleUI
             carManager.UpdateCar(new Car { Id = 1005, BrandId = 257, Description = "Modified car.", ColorId = 126, ModelYear = 2020, DailyPrice = 769 });
 
             // RemoveCar method.
-            carManager.RemoveCar(1008);
+            carManager.DeleteCar(1008);
         }
     }
 }
