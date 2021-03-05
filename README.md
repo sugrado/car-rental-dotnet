@@ -1,5 +1,12 @@
 # Multitier architecture project. Daily car rental simulation.  
   
+Mar 5, 2021  
+- Authorization system added.  
+- JWT integration added.  
+- Cache Aspect added.  
+- Transaction Aspect added.  
+- Performance Aspect added.  
+  
 Feb 28, 2021  
 - Add CarImages table.  
 - Add a picture to the car via the WebAPI.  
