@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
         public IActionResult GetAll()
         {
             var result = _carService.GetAllCars();
-            if (result.Success) Ok(result);
+            if (result.Success) return Ok(result);
             return BadRequest(result);
         }
 
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
         public IActionResult GetCarDetails()
         {
             var result = _carService.GetCarDetails();
-            if (result.Success) Ok(result);
+            if (result.Success) return Ok(result);
             return BadRequest(result);
         }
 
