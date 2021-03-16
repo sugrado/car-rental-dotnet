@@ -54,7 +54,7 @@ namespace Business.Concrete
             var oldpath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\wwwroot")) + _carImageDal.Get(p => p.Id == carImage.Id).ImagePath;
             IResult result = BusinessRules.Run(FileHelper.Delete(oldpath));
 
-            if(result != null)
+            if (result != null)
             {
                 return result;
             }
@@ -66,7 +66,7 @@ namespace Business.Concrete
         [CacheAspect]
         public IDataResult<List<CarImage>> GetImagesOfCar(Car car)
         {
-            var result = _carImageDal.GetAll(p=>p.CarId == car.Id);
+            var result = _carImageDal.GetAll(p => p.CarId == car.Id);
             return new SuccessDataResult<List<CarImage>>(result, Messages.Listed);
         }
 
@@ -94,50 +94,16 @@ namespace Business.Concrete
             return new SuccessResult(Messages.Updated);
         }
 
-        private IResult CheckCarImageLimit(int carId)
+        public IDataResult<List<CarImage>> GetImagesByCarId(int CarId)
         {
-            var x = _carImageDal.GetAll().Where(p => p.CarId == carId).ToList();
-            
-            if (x.Count >= 5)
+            var result = _carImageDal.GetAll(c => c.CarId == CarId).Any();
+            if (!result)
             {
-                return new ErrorResult(Messages.CarImageLımıtExceeded);
+                List<CarImage> carimage = new List<CarImage>();
+                carimage.Add(new CarImage { CarId = CarId, ImagePath = @"\Images\default.jpg" });
+                return new SuccessDataResult<List<CarImage>>(carimage);
             }
-            return new SuccessResult();
-        }
-
-
-        public IDataResult<List<CarImage>> GetImagesByCarId(int id)
-        {
-            IResult result = BusinessRules.Run(CheckIfCarImageNull(id));
-
-            if (result != null)
-            {
-                return new ErrorDataResult<List<CarImage>>(result.Message);
-            }
-
-            return new SuccessDataResult<List<CarImage>>(CheckIfCarImageNull(id).Data);
-        }
-
-         private IDataResult<List<CarImage>> CheckIfCarImageNull(int id)
-        {
-            try
-            {
-                string path = @"\Images\default.jpg";
-                var result = _carImageDal.GetAll(c => c.CarId == id).Any();
-                if (!result)
-                {
-                    List<CarImage> carimage = new List<CarImage>();
-                    carimage.Add(new CarImage { CarId = id, ImagePath = path, Date = DateTime.Now });
-                    return new SuccessDataResult<List<CarImage>>(carimage);
-                }
-            }
-            catch (Exception exception)
-            {
-
-                return new ErrorDataResult<List<CarImage>>(exception.Message);
-            }
-
-            return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll(p => p.CarId == id).ToList());
+            return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll(p => p.CarId == CarId));
         }
 
         public IResult TransactionalAdd(IFormFile file, CarImage carImage)
@@ -145,6 +111,17 @@ namespace Business.Concrete
             AddCarImage(file, carImage);
             UpdateCarImage(file, carImage);
             return new SuccessResult(Messages.Updated);
+        }
+
+        private IResult CheckCarImageLimit(int carId)
+        {
+            var x = _carImageDal.GetAll().Where(p => p.CarId == carId).ToList();
+
+            if (x.Count >= 5)
+            {
+                return new ErrorResult(Messages.CarImageLımıtExceeded);
+            }
+            return new SuccessResult();
         }
     }
 }

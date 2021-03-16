@@ -91,5 +91,20 @@ namespace Business.Concrete
             _carDal.Update(car);
             return new SuccessResult(Messages.Updated);
         }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetailsByBrand(int id)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p=>p.BrandId == id), Messages.Listed);
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetailsByColor(int id)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p => p.BrandId == id), Messages.Listed);
+        }
+
+        public IDataResult<CarDetailDto> GetCarDetailsById(int id)
+        {
+            return new SuccessDataResult<CarDetailDto>(_carDal.GetCarDetails().SingleOrDefault(p => p.Id == id));
+        }
     }
 }
