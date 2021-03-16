@@ -1,5 +1,10 @@
 # Multitier architecture project. Daily car rental simulation.  
   
+Mar 17, 2021  
+- Fixed GetImagesByCarId method.  
+- Add "get car details by brand" method.  
+- Add "get car details by color" method.  
+  
 Mar 5, 2021  
 - Authorization system added.  
 - JWT integration added.  
