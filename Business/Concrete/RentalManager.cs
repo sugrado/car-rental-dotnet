@@ -5,6 +5,7 @@ using Business.ValidationRules.FluentValdiation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -29,11 +30,19 @@ namespace Business.Concrete
         [CacheRemoveAspect("IRentalService.Get")]
         public IResult AddRental(Rental rental)
         {
+            IResult result = BusinessRules.Run(IsRentable(rental));
+
+            if (result != null)
+            {
+                return result;
+            }
+
             if (rental.ReturnDate == null) 
                 return new ErrorResult(Messages.ReturnDateIsNull);
 
             _rentalDal.Add(rental);
-            return new SuccessResult(Messages.Added);
+            
+            return new SuccessResult(Messages.Processed);
         }
 
         [SecuredOperation("rental.delete,admin")]
@@ -50,6 +59,11 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(), Messages.Listed);
         }
 
+        public IDataResult<List<Rental>> GetAllByCarId(int carId)
+        {
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(r => r.CarId == carId));
+        }
+
         [CacheAspect]
         public IDataResult<Rental> GetById(int id)
         {
@@ -61,6 +75,11 @@ namespace Business.Concrete
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails(), Messages.Listed);
         }
 
+        public IDataResult<RentalDetailDto> GetRentalDetailsById(int id)
+        {
+            return new SuccessDataResult<RentalDetailDto>(_rentalDal.GetRentalDetails().SingleOrDefault(r=>r.Id == id), Messages.Listed);
+        }
+
         [ValidationAspect(typeof(RentalValidator))]
         [SecuredOperation("rental.update,admin")]
         [CacheRemoveAspect("IRentalService.Get")]
@@ -68,6 +87,21 @@ namespace Business.Concrete
         {
             _rentalDal.Update(rental);
             return new SuccessResult(Messages.Updated);
+        }
+
+        private IResult IsRentable(Rental rental)
+        {
+            var result = this.GetAllByCarId(rental.CarId).Data.LastOrDefault();
+            var nowTime = DateTime.Now;
+            if (result == null)
+            {
+                return new SuccessResult(Messages.Rentable);
+            }
+            else if (nowTime<result.ReturnDate)
+            {
+                return new ErrorResult(Messages.NotRentable);
+            }
+            return new SuccessResult(Messages.Rentable);
         }
     }
 }

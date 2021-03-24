@@ -37,9 +37,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Car car)
         {
-            var result = _carService.DeleteCar(id);
+            var result = _carService.DeleteCar(car);
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }
@@ -88,6 +88,14 @@ namespace WebAPI.Controllers
         public IActionResult GetByColorId(int id)
         {
             var result = _carService.GetCarsByColorId(id);
+            if (result.Success) return Ok(result);
+            return BadRequest(result);
+        }
+
+        [HttpGet("getbymultipleid")]
+        public IActionResult GetByMultipleId(int brandId, int colorId)
+        {
+            var result = _carService.GetByMultipleId(brandId, colorId);
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }

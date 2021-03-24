@@ -75,8 +75,8 @@ namespace ConsoleUI
 
             // GetById method.
             Console.WriteLine(carManager.GetById(3002).Data.ModelYear);
-            Console.WriteLine("{0}", brandManager.GetById(1).Data.Name);
-            Console.WriteLine("{0}", colorManager.GetById(2).Data.Name);
+            Console.WriteLine("{0}", brandManager.GetById(1).Data.BrandName);
+            Console.WriteLine("{0}", colorManager.GetById(2).Data.ColorName);
 
             // GetCarsByColorId method.
             foreach (var x in carManager.GetCarsByColorId(2).Data)

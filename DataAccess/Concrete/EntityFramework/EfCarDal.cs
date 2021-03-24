@@ -19,18 +19,42 @@ namespace DataAccess.Concrete.EntityFramework
             {
                 
                 var result = from c in filter == null ? context.Cars : context.Cars.Where(filter)
-                             join b in context.Brands on c.BrandId equals b.Id
-                             join co in context.Colors on c.ColorId equals co.Id
+                             join b in context.Brands on c.BrandId equals b.BrandId
+                             join co in context.Colors on c.ColorId equals co.ColorId
                              select new CarDetailDto
                              {
                                  Id = c.Id,
-                                 BrandName = b.Name,
-                                 ColorName = co.Name,
+                                 BrandName = b.BrandName,
+                                 ColorName = co.ColorName,
                                  DailyPrice = c.DailyPrice,
                                  Description = c.Description,
                                  ModelYear = c.ModelYear
                              };
                 return result.ToList();
+            }
+        }
+
+        public CarDetailDto GetCarDetail(int carId)
+        {
+            using (CarsinfoContext context = new CarsinfoContext())
+            {
+
+                var result = from c in context.Cars.Where(c=>c.Id == carId)
+                             join b in context.Brands on c.BrandId equals b.BrandId
+                             join co in context.Colors on c.ColorId equals co.ColorId
+                             select new CarDetailDto
+                             {
+                                 Id = c.Id,
+                                 BrandId = b.BrandId,
+                                 ColorId = co.ColorId,
+                                 BrandName = b.BrandName,
+                                 ColorName = co.ColorName,
+                                 DailyPrice = c.DailyPrice,
+                                 Description = c.Description,
+                                 ModelYear = c.ModelYear,
+                                 Status = !context.Rentals.Any(r => r.CarId == carId && r.ReturnDate == null)
+                             };
+                return result.SingleOrDefault();
             }
         }
     }
