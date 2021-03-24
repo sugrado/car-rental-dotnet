@@ -1,7 +1,7 @@
 # Multitier architecture project. Daily car rental simulation.  
   
 Mar 24, 2021  
-- Backend Custom Error Middleware.  
+- Backend Custom Error Middleware added.  
 - Payment feature added.  
 - Fixed some bugs.  
   
