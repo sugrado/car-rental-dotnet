@@ -1,5 +1,10 @@
 # Multitier architecture project. Daily car rental simulation.  
   
+Mar 24, 2021  
+- Backend Custom Error Middleware.  
+- Payment feature added.  
+- Fixed some bugs.  
+  
 Mar 17, 2021  
 - Fixed GetImagesByCarId method.  
 - Add "get car details by brand" method.  
