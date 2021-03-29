@@ -26,7 +26,7 @@ namespace Business.Concrete
         {
             var claims = _userService.GetClaims(user).Data;
             var accessToken = _tokenHelper.CreateToken(user, claims);
-            return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
+            return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessLogin);
         }
 
         public IDataResult<User> Login(UserForLoginDto userForLoginDto)
@@ -45,7 +45,7 @@ namespace Business.Concrete
 
         }
 
-        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
+        public IResult Register(UserForRegisterDto userForRegisterDto, string password)
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -59,7 +59,31 @@ namespace Business.Concrete
                 Status = true
             };
             _userService.AddUser(user);
-            return new SuccessDataResult<User>(user, Messages.UserRegistered);
+            /*
+             * return new SuccessDataResult<User>(user,Messages.UserRegistered);
+             */
+            return new SuccessResult(Messages.UserRegistered);
+        }
+
+        public IResult ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            byte[] passwordHash, passwordSalt;
+            var userToCheck = _userService.GetByMail(changePasswordDto.UserEmail).Data;
+            if (userToCheck == null)
+            {
+                return new ErrorDataResult<User>(Messages.EmailInvalid);
+            }
+            if (!HashingHelper.VerifyPasswordHash(changePasswordDto.oldPass, userToCheck.PasswordHash, userToCheck.PasswordSalt))
+            {
+                return new ErrorDataResult<User>(Messages.OldPasswordInvalid);
+            }
+            HashingHelper.CreatePasswordHash(changePasswordDto.newPass, out passwordHash, out passwordSalt);
+            userToCheck.PasswordHash = passwordHash;
+            userToCheck.PasswordSalt = passwordSalt;
+            _userService.UpdateHelper(userToCheck);
+
+            return new SuccessResult(Messages.PasswordChanged);
+
         }
 
         public IResult UserExist(string email)

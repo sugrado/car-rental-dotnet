@@ -24,11 +24,14 @@ namespace DataAccess.Concrete.EntityFramework
                              select new CarDetailDto
                              {
                                  Id = c.Id,
+                                 BrandId = b.BrandId,
+                                 ColorId = co.ColorId,
                                  BrandName = b.BrandName,
                                  ColorName = co.ColorName,
                                  DailyPrice = c.DailyPrice,
                                  Description = c.Description,
-                                 ModelYear = c.ModelYear
+                                 ModelYear = c.ModelYear,
+                                 MinFindexPoint = c.MinFindexPoint,
                              };
                 return result.ToList();
             }
@@ -52,6 +55,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  DailyPrice = c.DailyPrice,
                                  Description = c.Description,
                                  ModelYear = c.ModelYear,
+                                 MinFindexPoint = c.MinFindexPoint,
                                  Status = !context.Rentals.Any(r => r.CarId == carId && r.ReturnDate == null)
                              };
                 return result.SingleOrDefault();

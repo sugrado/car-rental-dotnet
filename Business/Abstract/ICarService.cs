@@ -22,5 +22,6 @@ namespace Business.Abstract
         IDataResult<List<CarDetailDto>> GetCarDetailsByColor(int id);
         IDataResult<CarDetailDto> GetCarDetailsById(int id);
         IDataResult<List<CarDetailDto>> GetByMultipleId(int brandId, int colorId);
+        IResult CheckIfRentable(int id);
     }
 }

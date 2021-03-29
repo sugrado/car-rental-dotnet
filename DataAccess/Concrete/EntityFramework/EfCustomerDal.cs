@@ -24,9 +24,29 @@ namespace DataAccess.Concrete.EntityFramework
                                  CustomerId = customer.Id,
                                  CompanyName = customer.CompanyName,
                                  FirstName = user.FirstName,
-                                 LastName = user.LastName
+                                 LastName = user.LastName,
+                                 FindexPoint  = customer.FindexPoint
                              };
                 return result.ToList();
+            }
+        }
+
+        public CustomerDetailDto GetCustomerDetail(int id)
+        {
+            using (CarsinfoContext context = new CarsinfoContext())
+            {
+
+                var result = from customer in context.Customers.Where(c => c.Id == id)
+                             join user in context.Users on customer.UserId equals user.Id
+                             select new CustomerDetailDto
+                             {
+                                 CustomerId = customer.Id,
+                                 CompanyName = customer.CompanyName,
+                                 FirstName = user.FirstName,
+                                 LastName = user.LastName,
+                                 FindexPoint = customer.FindexPoint
+                             };
+                return result.SingleOrDefault();
             }
         }
     }

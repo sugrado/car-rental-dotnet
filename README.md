@@ -1,5 +1,12 @@
 # Multitier architecture project. Daily car rental simulation.  
   
+Mar 29, 2021  
+- Refactoring auth manager.  
+- Erasability control for brands and colors.  
+- Customer findex score control and management.  
+- Change password feature.  
+- For more information visit my repository: [Daily Car Rental Project](https://github.com/sugrado/carrental-ng)
+  
 Mar 24, 2021  
 - Backend Custom Error Middleware added.  
 - Payment feature added.  

@@ -98,7 +98,7 @@ namespace ConsoleUI
             carManager.UpdateCar(new Car { Id = 1005, BrandId = 257, Description = "Modified car.", ColorId = 126, ModelYear = 2020, DailyPrice = 769 });
 
             // RemoveCar method.
-            carManager.DeleteCar(1008);
+            //carManager.DeleteCar(1008);
         }
     }
 }

@@ -47,10 +47,15 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Customer>>(_customerDal.GetAll(), Messages.Listed);
         }
 
-        [CacheAspect]
+        //[CacheAspect]
         public IDataResult<Customer> GetById(int id)
         {
             return new SuccessDataResult<Customer>(_customerDal.GetAll().SingleOrDefault(p=>p.Id == id));
+        }
+
+        public IDataResult<CustomerDetailDto> GetCustomerDetail(int customerId)
+        {
+            return new SuccessDataResult<CustomerDetailDto>(_customerDal.GetCustomerDetail(customerId));
         }
 
         public IDataResult<List<CustomerDetailDto>> GetCustomersDetail()
@@ -65,6 +70,22 @@ namespace Business.Concrete
         {
             _customerDal.Update(customer);
             return new SuccessResult(Messages.Updated);
+        }
+
+        public IResult UpdateCustomerFindexScore(Customer customer)
+        {
+            if (customer.FindexPoint >= 1900)
+            {
+                return new ErrorResult(Messages.BecameVIP);
+            }
+
+            var customerToUpdate = GetById(customer.Id).Data;
+            customerToUpdate.FindexPoint += 100;
+            customerToUpdate.CompanyName = customer.CompanyName;
+            customerToUpdate.UserId = customer.UserId;
+            UpdateCustomer(customerToUpdate);
+
+            return new SuccessResult(Messages.UserUpdated);
         }
     }
 }

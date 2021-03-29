@@ -29,5 +29,11 @@ namespace Business.Constants
         public static string NotRentable = "The car is currently rented.";
         public static string Rentable = "The vehicle is rentable now.";
         public static string Processed = "Purchase processed.";
+        public static string UsingNow = "The item is currently in use.";
+        public static string UserUpdated = "The changes have been saved.";
+        public static string PasswordChanged = "The password has been changed successfully.";
+        public static string OldPasswordInvalid = "Old password does not match.";
+        public static string EmailInvalid = "E-mail is incorrect.";
+        public static string BecameVIP = "You are a VIP customer.";
     }
 }

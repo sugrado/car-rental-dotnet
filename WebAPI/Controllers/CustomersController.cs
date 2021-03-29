@@ -36,8 +36,16 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("getcustomerdetail")]
+        public IActionResult GetDetailsById(int customerId)
+        {
+            var result = _customerService.GetCustomerDetail(customerId);
+            if (result.Success) return Ok(result);
+            return BadRequest(result);
+        }
+
         [HttpGet("getcustomersdetail")]
-        public IActionResult GetDetailsById()
+        public IActionResult GetDetails()
         {
             var result = _customerService.GetCustomersDetail();
             if (result.Success) return Ok(result);
@@ -64,6 +72,14 @@ namespace WebAPI.Controllers
         public IActionResult Delete(Customer customer)
         {
             var result = _customerService.DeleteCustomer(customer);
+            if (result.Success) return Ok(result);
+            return BadRequest(result);
+        }
+
+        [HttpPost("updatefindex")]
+        public IActionResult UpdateCustomerFindexScore(Customer customer)
+        {
+            var result = _customerService.UpdateCustomerFindexScore(customer);
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }

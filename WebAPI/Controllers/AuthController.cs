@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
             var userToLogin = _authService.Login(userForLoginDto);
             if (!userToLogin.Success)
             {
-                return BadRequest(userToLogin.Message);
+                return BadRequest(userToLogin);
             }
 
             var result = _authService.CreateAccessToken(userToLogin.Data);
@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
                 return Ok(result);
             }
 
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
         [HttpPost("register")]
@@ -44,17 +44,33 @@ namespace WebAPI.Controllers
             var userExists = _authService.UserExist(userForRegisterDto.Email);
             if (!userExists.Success)
             {
-                return BadRequest(userExists.Message);
+                return BadRequest(userExists);
             }
 
             var registerResult = _authService.Register(userForRegisterDto, userForRegisterDto.Password);
-            var result = _authService.CreateAccessToken(registerResult.Data);
-            if (result.Success)
+            /*
+             * If you want auto-login after registered, use the method below and change "registerResult" to "result" in if statement and else statement.
+             * var result = _authService.CreateAccessToken(registerResult.Data);
+             */
+            if (registerResult.Success)
             {
-                return Ok(result.Data);
+                return Ok(registerResult);
             }
 
-            return BadRequest(result.Message);
+            return BadRequest(registerResult);
+        }
+
+        [HttpPost("changepass")]
+        public ActionResult ChangeUserPassword(ChangePasswordDto changePasswordDto)
+        {
+            var changePasswordResult = _authService.ChangePassword(changePasswordDto);
+
+            if (changePasswordResult.Success)
+            {
+                return Ok(changePasswordResult);
+            }
+
+            return BadRequest(changePasswordResult);
         }
     }
 }

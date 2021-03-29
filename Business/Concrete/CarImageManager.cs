@@ -47,7 +47,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CarImageValidator))]
-        [SecuredOperation("image.delete,admin")]
+        //[SecuredOperation("image.delete,admin")]
         [CacheRemoveAspect("ICarImageService.Get")]
         public IResult DeleteCarImage(CarImage carImage)
         {

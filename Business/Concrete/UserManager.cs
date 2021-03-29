@@ -31,14 +31,23 @@ namespace Business.Concrete
             return new SuccessResult(Messages.Added);
         }
 
-        [SecuredOperation("user.delete,admin")]
+        //[SecuredOperation("user.delete,admin")]
         [CacheRemoveAspect("IUserService.Get")]
         public IResult DeleteUser(User user)
         {
             _userDal.Delete(user);
             return new SuccessResult(Messages.Deleted);
         }
-        
+
+        //[SecuredOperation("user.delete,admin")]
+        [CacheRemoveAspect("IUserService.Get")]
+        public IResult DeleteUserById(int userId)
+        {
+            var forDelete = _userDal.GetAll(p=>p.Id==userId).SingleOrDefault();
+            _userDal.Delete(forDelete);
+            return new SuccessResult(Messages.Deleted);
+        }
+
         [CacheAspect]
         public IDataResult<List<User>> GetAllUsers()
         {
@@ -62,12 +71,25 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(UserValidator))]
-        [SecuredOperation("user.update,admin")]
+        //[SecuredOperation("user.update,admin")]
         [CacheRemoveAspect("IUserService.Get")]
-        public IResult UpdateUser(User user)
+        public IResult UpdateHelper(User user)
         {
             _userDal.Update(user);
             return new SuccessResult(Messages.Updated);
+        }
+
+        [ValidationAspect(typeof(UserValidator))]
+        //[SecuredOperation("user.update,admin")]
+        [CacheRemoveAspect("IUserService.Get")]
+        public IResult UpdateUser(User user)
+        {
+            var userToUpdate = GetById(user.Id).Data;
+            userToUpdate.FirstName = user.FirstName;
+            userToUpdate.LastName = user.LastName;
+            userToUpdate.Email = user.Email;
+            UpdateHelper(userToUpdate);
+            return new SuccessResult(Messages.UserUpdated);
         }
     }
 }

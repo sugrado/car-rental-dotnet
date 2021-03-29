@@ -8,8 +8,10 @@ using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcers.Caching;
 using Core.CrossCuttingConcers.Validation.FluentValidation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.DTOs;
 using FluentValidation;
@@ -29,7 +31,7 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        //[SecuredOperation("car.add,admin")]
+        [SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult AddCar(Car car)
@@ -74,15 +76,22 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.ColorId == id), Messages.Listed);
         }
 
-        //[SecuredOperation("car.delete,admin")]
+        [SecuredOperation("car.delete,admin")]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult DeleteCar(Car car)
         {
+            IResult result = BusinessRules.Run(IsDeletable(car));
+
+            if (result != null)
+            {
+                return result;
+            }
+
             _carDal.Delete(car);
             return new SuccessResult(Messages.Deleted);
         }
 
-        //[SecuredOperation("car.update,admin")]
+        [SecuredOperation("car.update,admin")]
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult UpdateCar(Car car)
@@ -106,17 +115,44 @@ namespace Business.Concrete
             return new SuccessDataResult<CarDetailDto>(_carDal.GetCarDetail(id), Messages.Listed);
         }
 
-        /*public IDataResult<List<CarDetailDto>> GetByMultipleId(int brandId, int colorId)
-        {
-            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(c => c.BrandId == brandId &&  c.ColorId == colorId  ), Messages.Listed);
-        }*/
-
         public IDataResult<List<CarDetailDto>> GetByMultipleId(int brandId, int colorId)
         {
             if(brandId==0 && colorId==0) return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(), Messages.Listed);
             else if (brandId==0 && colorId != 0) return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(c => c.ColorId == colorId), Messages.Listed);
             else if (colorId==0 && brandId != 0) return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(c => c.BrandId == brandId), Messages.Listed);
             else return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(c => c.BrandId == brandId && c.ColorId == colorId), Messages.Listed);
+        }
+
+        private IResult IsDeletable(Car car)
+        {
+            IRentalService rentalService = new RentalManager(new EfRentalDal());
+            var nowTime = DateTime.Now;
+            var result = rentalService.GetAllByCarId(car.Id).Data.Any();
+            var result2 = rentalService.GetAllByCarId(car.Id).Data.LastOrDefault();
+            if (result)
+            {
+                if (nowTime < result2.ReturnDate)
+                    return new ErrorResult(Messages.UsingNow);
+            }
+            
+            return new SuccessResult();
+        }
+
+        public IResult CheckIfRentable(int id)
+        {
+            IRentalService rentalService = new RentalManager(new EfRentalDal());
+            var nowTime = DateTime.Now;
+            var forCheck = _carDal.GetAll(p => p.Id == id).SingleOrDefault();
+            var result = rentalService.GetAllByCarId(forCheck.Id).Data.LastOrDefault();
+            if (result == null)
+            {
+                return new SuccessResult(Messages.Rentable);
+            }
+            else if (nowTime < result.ReturnDate)
+            {
+                return new ErrorResult(Messages.NotRentable);
+            }
+            return new SuccessResult(Messages.Rentable);
         }
     }
 }

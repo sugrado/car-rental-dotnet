@@ -4,8 +4,10 @@ using Business.Constants;
 using Business.ValidationRules.FluentValdiation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(BrandValidator))]
-        //[SecuredOperation("brand.add,admin")]
+        [SecuredOperation("brand.add,admin")]
         [CacheRemoveAspect("IBrandService.Get")]
         public IResult AddBrand(Brand brand)
         {
@@ -32,10 +34,17 @@ namespace Business.Concrete
             return new SuccessResult(Messages.Added);
         }
 
-        //[SecuredOperation("brand.delete,admin")]
+        [SecuredOperation("brand.delete,admin")]
         [CacheRemoveAspect("IBrandService.Get")]
         public IResult DeleteBrand(Brand brand)
         {
+            IResult result = BusinessRules.Run(IsDeletable(brand));
+
+            if (result != null)
+            {
+                return result;
+            }
+
             _brandDal.Delete(brand);
             return new SuccessResult(Messages.Deleted);
         }
@@ -52,13 +61,22 @@ namespace Business.Concrete
             return new SuccessDataResult<Brand>(_brandDal.GetAll().SingleOrDefault(p => p.BrandId == id));
         }
 
-        //[SecuredOperation("brand.update,admin")]
+        [SecuredOperation("brand.update,admin")]
         [CacheRemoveAspect("IBrandService.Get")]
         [ValidationAspect(typeof(BrandValidator))]
         public IResult UpdateBrand(Brand brand)
         {
             _brandDal.Update(brand);
             return new SuccessResult(Messages.Updated);
+        }
+
+        private IResult IsDeletable(Brand brand)
+        {
+            ICarService carService = new CarManager(new EfCarDal());
+            var result = carService.GetCarsByBrandId(brand.BrandId).Data.Any();
+            if (result)
+                return new ErrorResult(Messages.UsingNow);
+            return new SuccessResult();
         }
     }
 }

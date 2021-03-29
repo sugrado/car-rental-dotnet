@@ -49,6 +49,11 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
+        public IDataResult<List<CreditCard>> GetByUserId(int userId)
+        {
+            return new SuccessDataResult<List<CreditCard>>(_creditCardDal.GetAll(p=>p.UserId==userId), Messages.Listed);
+        }
+
         [ValidationAspect(typeof(CreditCardValidator))]
         //[SecuredOperation("creditcard.update,admin")]
         [CacheRemoveAspect("ICreditCardService.Get")]
