@@ -17,7 +17,7 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using (CarsinfoContext context = new CarsinfoContext())
             {
-                
+
                 var result = from c in filter == null ? context.Cars : context.Cars.Where(filter)
                              join b in context.Brands on c.BrandId equals b.BrandId
                              join co in context.Colors on c.ColorId equals co.ColorId
@@ -32,6 +32,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  Description = c.Description,
                                  ModelYear = c.ModelYear,
                                  MinFindexPoint = c.MinFindexPoint,
+                                 CoverPhoto = context.CarImages.Where(k => k.CarId == c.Id).FirstOrDefault().ImagePath == null ? @"\Images\default.png" : context.CarImages.Where(k => k.CarId == c.Id).FirstOrDefault().ImagePath
                              };
                 return result.ToList();
             }
@@ -55,8 +56,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  DailyPrice = c.DailyPrice,
                                  Description = c.Description,
                                  ModelYear = c.ModelYear,
-                                 MinFindexPoint = c.MinFindexPoint,
-                                 Status = !context.Rentals.Any(r => r.CarId == carId && r.ReturnDate == null)
+                                 MinFindexPoint = c.MinFindexPoint
                              };
                 return result.SingleOrDefault();
             }

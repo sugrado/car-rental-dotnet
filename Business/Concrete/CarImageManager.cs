@@ -29,7 +29,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CarImageValidator))]
-        [SecuredOperation("image.add,admin")]
+        //[SecuredOperation("image.add,admin")]
         [CacheRemoveAspect("ICarImageService.Get")]
         public IResult AddCarImage(IFormFile file, CarImage carImage)
         {
@@ -61,13 +61,6 @@ namespace Business.Concrete
 
             _carImageDal.Delete(carImage);
             return new SuccessResult(Messages.Deleted);
-        }
-
-        [CacheAspect]
-        public IDataResult<List<CarImage>> GetImagesOfCar(Car car)
-        {
-            var result = _carImageDal.GetAll(p => p.CarId == car.Id);
-            return new SuccessDataResult<List<CarImage>>(result, Messages.Listed);
         }
 
         [PerformanceAspect(5)]

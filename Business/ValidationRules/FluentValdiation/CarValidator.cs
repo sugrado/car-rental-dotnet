@@ -22,6 +22,8 @@ namespace Business.ValidationRules.FluentValdiation
             RuleFor(p => p.ColorId).NotEmpty();
 
             RuleFor(p => p.ModelYear).NotEmpty();
+
+            RuleFor(p => p.MinFindexPoint).InclusiveBetween(0, 1900);
         }
     }
 }   
